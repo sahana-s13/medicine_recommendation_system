@@ -19,9 +19,9 @@ python main.py            # http://127.0.0.1:5000  (login: admin / admin)
 ```
 Optional environment variables: `MEDREC_SECRET_KEY`, `MEDREC_USERNAME`, `MEDREC_PASSWORD`, `FLASK_DEBUG=1`.
 
+WebApp link: https://medicine-recommendation-system-nioz.onrender.com/
+
 The patient photo is kept in memory for the report only; it is never saved to disk.
 The CALL Emergency button shows the calling screen only - it does not place a real phone call.
 
 Dark mode: use the moon/sun button in the top bar. The choice is remembered in the browser.
-
-Developer: Sahana S - https://www.linkedin.com/in/sahana-s-3078552bb
