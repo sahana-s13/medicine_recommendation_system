@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}How to use{% endblock %}
+{% block content %}
+<div class="container">
+  <section class="page-hero mb-4">
+    <span class="eyebrow">Guide</span>
+    <h1 class="display-title mb-1">How to use the Medicine Recommendation System</h1>
+    <p class="lead-sub mb-0">A step-by-step guide to recording a patient, getting a recommendation and downloading the report, plus important safety warnings.</p>
+  </section>
+
+  <!-- Emergency warning first -->
+  <div class="alert-emergency mb-4">
+    <i class="bi bi-exclamation-octagon-fill"></i>
+    <div>
+      <div class="fw-bold mb-1">In an emergency, do not use this form - call for help first.</div>
+      <div>Chest pain, difficulty breathing, severe bleeding, fainting, stroke signs (face drooping, arm weakness, slurred speech) or a suspected poisoning need immediate care. Press <strong>CALL Emergency</strong> at the top of any page or dial your local emergency number (112 in India). Use the small arrow next to it to add family or doctor numbers that should be alerted too.</div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Step by step -->
+    <div class="col-lg-8">
+      <div class="card app-card hover-lift h-100">
+        <div class="card-header-app"><i class="bi bi-list-ol"></i> Step-by-step instructions</div>
+        <div class="card-body p-4">
+          <ol class="steps-list">
+            <li>
+              <h3>Sign in</h3>
+              <p>Log in with your username and password. You will land on the <strong>Home</strong> page with the patient assessment form.</p>
+            </li>
+            <li>
+              <h3>Fill in personal information</h3>
+              <ul>
+                <li><strong>Full name, age and contact number are mandatory</strong> - the form will not submit without them.</li>
+                <li>Optionally upload a clear, front-facing <strong>patient photo</strong> (JPG, PNG or WEBP, up to 2 MB). Use <em class="fst-normal">Remove</em> to change it.</li>
+                <li>Add gender and an email address if available.</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Enter vitals</h3>
+              <ul>
+                <li>Select the <strong>blood group</strong> (choose "Unknown" if not sure).</li>
+                <li>Enter <strong>weight in kilograms</strong> and <strong>height in centimetres</strong>.</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Add medical background</h3>
+              <ul>
+                <li><strong>Currently taking medications:</strong> list every medicine with dose, e.g. "Metformin 500 mg twice daily".</li>
+                <li><strong>Allergies:</strong> list drug, food or other allergies. Write "None" if there are no known allergies.</li>
+                <li><strong>Medical history:</strong> past illnesses, surgeries, chronic conditions or family history.</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Describe the symptoms</h3>
+              <ul>
+                <li>Type symptoms into <strong>Enter patient symptoms</strong>, separated by commas, e.g. <code>fever, cough, headache</code>.</li>
+                <li>Or simply <strong>click the suggested symptom chips</strong> below the box to add them. Click a chip again to remove it.</li>
+                <li>Two or more symptoms usually give a more accurate result than one.</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Get the recommendation</h3>
+              <p>Click <strong>Get recommendation</strong>. The assessment report appears below the form with the possible condition and tabs for Description, Precautions, Medications, Workouts and Diet.</p>
+            </li>
+            <li>
+              <h3>Download the PDF report</h3>
+              <p>Click <strong>Download PDF report</strong> in the assessment report. The PDF includes patient details, photo, medical background, the possible condition and all recommendations - ready to print or share with a doctor.</p>
+            </li>
+            <li>
+              <h3>Start a new patient</h3>
+              <p>Click <strong>Clear form</strong> to reset every field before entering the next patient.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side column -->
+    <div class="col-lg-4 d-flex flex-column gap-4">
+      <div class="card app-card hover-lift">
+        <div class="card-header-app"><i class="bi bi-stars"></i> Why use it</div>
+        <div class="card-body">
+          <ul class="check-list mb-0">
+            <li><strong>Fast:</strong> a structured recommendation within seconds.</li>
+            <li><strong>Complete patient profile:</strong> personal details, vitals, allergies and history in one place.</li>
+            <li><strong>All-round guidance:</strong> precautions, medications, diet and workouts together.</li>
+            <li><strong>Shareable:</strong> a clean PDF report to carry to a doctor's visit.</li>
+            <li><strong>Emergency-ready:</strong> the CALL Emergency button is on every page and can alert your own saved numbers together with emergency services.</li>
+            <li><strong>Comfortable to use:</strong> works on phones and computers, with light and dark mode.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card app-card hover-lift">
+        <div class="card-header-app"><i class="bi bi-lightbulb"></i> Tips for better results</div>
+        <div class="card-body">
+          <ul class="check-list mb-0">
+            <li>Use simple, common words: "headache", "vomiting", "skin rash".</li>
+            <li>Separate each symptom with a comma.</li>
+            <li>Check the "recognised symptoms" tags in the report to confirm what the system understood.</li>
+            <li>Keep allergies and current medications up to date.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency numbers setting -->
+  <div class="card app-card hover-lift mt-4" id="emergency-numbers">
+    <div class="card-header-app"><i class="bi bi-telephone-plus"></i> Customize emergency numbers</div>
+    <div class="card-body p-4">
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <p class="mb-3">When <strong>CALL Emergency</strong> is pressed, the system calls emergency services (112) and the nearest hospitals. You can add up to 10 extra numbers - such as family members, a family doctor or a caregiver - so they are alerted at the same time.</p>
+          <ol class="steps-list">
+            <li>
+              <h3>Open the emergency menu</h3>
+              <p>Click the small <strong>arrow (&#9662;)</strong> on the right side of the red <strong>CALL Emergency</strong> button. The menu shows every number that will be alerted.</p>
+            </li>
+            <li>
+              <h3>Choose "Customize emergency numbers"</h3>
+              <p>A settings window opens with the list of saved numbers.</p>
+            </li>
+            <li>
+              <h3>Add a number</h3>
+              <ul>
+                <li>Type a <strong>name or label</strong> (optional), e.g. "Mother" or "Family doctor".</li>
+                <li>Type the <strong>phone number</strong> (required, 3-15 digits; +, spaces, - and brackets are allowed).</li>
+                <li>Click the <strong>+</strong> button. Duplicate or invalid numbers are rejected with a message.</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Remove a number</h3>
+              <p>Click the <strong>bin icon</strong> next to a saved number. Emergency services (112) and nearest hospitals are always included and cannot be removed.</p>
+            </li>
+            <li>
+              <h3>Click Done</h3>
+              <p>Changes are saved immediately. The next time CALL Emergency is pressed, the calling screen lists each number with its status (Calling... / Alerted).</p>
+            </li>
+          </ol>
+        </div>
+        <div class="col-lg-5 em-side">
+          <div class="warn-item mb-3"><i class="bi bi-hand-index-thumb"></i><div><strong>The main button works as before.</strong> Clicking the words "CALL Emergency" starts the call straight away - only the arrow opens the menu.</div></div>
+          <div class="warn-item mb-3"><i class="bi bi-phone"></i><div><strong>Saved per browser.</strong> Numbers are stored on this device and browser only. Add them again on other devices.</div></div>
+          <div class="warn-item mb-3"><i class="bi bi-check2-circle"></i><div><strong>Check your numbers.</strong> Make sure each number is correct and that the person is happy to be an emergency contact.</div></div>
+          <div class="warn-item"><i class="bi bi-telephone-x"></i><div><strong>Demo calling screen.</strong> This version does not place real phone calls. In a real emergency, also dial 112 directly.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warnings -->
+  <div class="card app-card hover-lift mt-4">
+    <div class="card-header-app"><i class="bi bi-exclamation-triangle"></i> Important warnings</div>
+    <div class="card-body p-4">
+      <div class="row g-3">
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-clipboard2-x"></i><div><strong>Not a diagnosis.</strong> Results are automated suggestions based on patterns in data. Only a qualified doctor can diagnose a condition.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-capsule"></i><div><strong>Do not self-medicate.</strong> Never start, stop or change a medicine based only on this report. Always consult a doctor or pharmacist.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-shield-exclamation"></i><div><strong>Check allergies and interactions.</strong> Suggested medicines are general and do not account for the patient's allergies or current medicines.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-people"></i><div><strong>Extra care groups.</strong> Children, pregnant or breastfeeding women, elderly people and patients with chronic illness should always see a doctor.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-hourglass-split"></i><div><strong>Worsening symptoms.</strong> If symptoms get worse, last more than 2-3 days or new symptoms appear, seek medical care promptly.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-telephone-x"></i><div><strong>Emergency button.</strong> CALL Emergency shows a calling screen in this demo version; it does not place real phone calls. For real emergencies, also dial 112 directly.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-phone"></i><div><strong>Saved emergency numbers.</strong> Your custom numbers are stored only in this browser. They are not shared with other devices, and clearing browser data removes them - check the list on each device you use.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-lock"></i><div><strong>Privacy.</strong> Patient data is used only to create the report and is not stored. Keep downloaded PDFs secure, as they contain personal health information.</div></div></div>
+        <div class="col-md-6"><div class="warn-item"><i class="bi bi-database-exclamation"></i><div><strong>Limited data.</strong> The system only knows the conditions and symptoms in its training data; rare conditions may not be detected.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

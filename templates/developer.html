@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Developer{% endblock %}
+{% block content %}
+<div class="container">
+  <section class="page-hero mb-4">
+    <span class="eyebrow">The team</span>
+    <h1 class="display-title mb-1">Developer</h1>
+  </section>
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card app-card hover-lift h-100">
+        <div class="card-body p-4 p-lg-5 text-center">
+          <div class="dev-avatar mx-auto mb-3">SS</div>
+          <h2 class="h4 fw-bold mb-1">Sahana S</h2>
+          <p class="text-muted-2 mb-4">Developer, Medicine Recommendation System</p>
+          <a class="btn btn-linkedin" href="https://www.linkedin.com/in/sahana-s-3078552bb" target="_blank" rel="noopener noreferrer">
+            <i class="bi bi-linkedin me-2"></i>Connect on LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card app-card hover-lift h-100">
+        <div class="card-header-app"><i class="bi bi-code-slash"></i> About the project</div>
+        <div class="card-body p-4 content-body">
+          <p>The Medicine Recommendation System is built with Python, Flask, pandas and scikit-learn, with a Bootstrap 5 interface.</p>
+          <div class="d-flex flex-wrap gap-2">
+            {% for t in ['Python', 'Flask', 'scikit-learn (SVC)', 'pandas', 'NumPy', 'Bootstrap 5', 'ReportLab (PDF)'] %}
+            <span class="tech-chip">{{ t }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% macro emergency_split(extra_cls, sm) -%}
+<div class="btn-group emergency-group {{ extra_cls }}">
+  <button type="button" class="btn btn-emergency{{ ' btn-sm' if sm }}" data-bs-toggle="modal"
+          data-bs-target="#emergencyModal" aria-label="Call emergency">
+    <i class="bi bi-telephone-outbound-fill me-1"></i>CALL Emergency
+  </button>
+  <button type="button" class="btn btn-emergency btn-emergency-split dropdown-toggle dropdown-toggle-split{{ ' btn-sm' if sm }}"
+          data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="Emergency numbers menu" title="Emergency numbers">
+    <span class="visually-hidden">Emergency numbers</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-end emergency-menu shadow">
+    <div class="em-menu-head">Numbers that will be alerted</div>
+    <ul class="em-list list-unstyled mb-0"></ul>
+    <div class="dropdown-divider"></div>
+    <button type="button" class="dropdown-item em-customize" data-bs-toggle="modal" data-bs-target="#emergencyNumbersModal">
+      <i class="bi bi-sliders me-2"></i>Customize emergency numbers
+    </button>
+  </div>
+</div>
+{%- endmacro %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Home{% endblock %} | Medicine Recommendation System</title>
+  <script>
+    /* Apply the saved theme before the page paints (prevents a white flash in dark mode) */
+    (function () {
+      try {
+        var t = localStorage.getItem('mrs-theme') ||
+                (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+        document.documentElement.setAttribute('data-bs-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+  {% if session.get('user') %}
+  <nav class="navbar navbar-expand-xl app-nav sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+        <span class="brand-text">Medicine <strong>Recommendation</strong> System</span>
+      </a>
+      {{ emergency_split('d-xl-none ms-auto me-2', True) }}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          {% set ep = request.endpoint %}
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep in ['index','predict'] }}" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'about' }}" href="{{ url_for('about') }}">About</a></li>
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'contact' }}" href="{{ url_for('contact') }}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'developer' }}" href="{{ url_for('developer') }}">Developer</a></li>
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'blog' }}" href="{{ url_for('blog') }}">Blog</a></li>
+          <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'how_to_use' }}" href="{{ url_for('how_to_use') }}">How to use</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-xl-0">
+          {{ emergency_split('d-none d-xl-inline-flex', False) }}
+          <button type="button" class="btn btn-theme theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <i class="bi bi-moon-stars-fill icon-dark"></i><i class="bi bi-sun-fill icon-light"></i>
+          </button>
+          <a class="btn btn-outline-light-soft" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="{% block main_class %}py-4 py-lg-5{% endblock %}">
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show app-alert" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endwith %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if session.get('user') %}
+  <footer class="app-footer">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span>&copy; Medicine Recommendation System</span>
+      <span class="small">For informational purposes only. Not a substitute for professional medical advice.</span>
+    </div>
+  </footer>
+
+  <!-- Emergency modal -->
+  <div class="modal fade" id="emergencyModal" tabindex="-1" aria-labelledby="emergencyTitle" aria-hidden="true"
+       data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content emergency-modal">
+        <div class="modal-body text-center p-4 p-md-5">
+          <div class="pulse-ring mx-auto mb-4"><i class="bi bi-telephone-fill"></i></div>
+          <h2 class="h4 fw-bold mb-2" id="emergencyTitle">Calling emergency and also to the nearest hospitals</h2>
+          <p class="text-muted-2 mb-1" id="emergencyStatus">Connecting<span class="dots"></span></p>
+          <p class="small text-muted-2 mb-3" id="emergencyTimer">00:00</p>
+          <div class="em-calling mb-4 text-start">
+            <div class="em-calling-head">Alerting these numbers</div>
+            <ul class="list-unstyled mb-0" id="emergencyCallingList"></ul>
+          </div>
+          <button type="button" class="btn btn-end-call px-4" data-bs-dismiss="modal">
+            <i class="bi bi-telephone-x-fill me-1"></i> Cancel call
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customize emergency numbers -->
+  <div class="modal fade" id="emergencyNumbersModal" tabindex="-1" aria-labelledby="emNumTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content app-modal">
+        <div class="modal-header">
+          <h2 class="modal-title h5 fw-bold" id="emNumTitle"><i class="bi bi-telephone-plus me-2 text-danger"></i>Customize emergency numbers</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-muted-2 mb-3">These numbers are alerted together with the emergency services and nearest hospitals every time <strong>CALL Emergency</strong> is pressed. They are saved in this browser.</p>
+          <form id="emNumForm" class="row g-2 align-items-start" novalidate>
+            <div class="col-sm-5">
+              <label for="emNumName" class="form-label small fw-semibold mb-1">Name / label</label>
+              <input type="text" class="form-control" id="emNumName" maxlength="40" placeholder="e.g. Family doctor">
+            </div>
+            <div class="col-sm-5">
+              <label for="emNumPhone" class="form-label small fw-semibold mb-1">Phone number <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" id="emNumPhone" maxlength="20" placeholder="e.g. +91 98765 43210">
+            </div>
+            <div class="col-sm-2 d-grid">
+              <label class="form-label small mb-1 d-none d-sm-block">&nbsp;</label>
+              <button type="submit" class="btn btn-primary-app"><i class="bi bi-plus-lg"></i><span class="d-sm-none ms-1">Add number</span></button>
+            </div>
+            <div class="col-12"><div class="invalid-feedback d-block small" id="emNumError"></div></div>
+          </form>
+          <div class="em-manage-head mt-2 mb-2">Saved numbers <span class="text-muted-2" id="emNumCount"></span></div>
+          <ul class="list-unstyled em-manage-list mb-0" id="emNumList"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-soft" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

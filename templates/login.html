@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block main_class %}login-page{% endblock %}
+{% block content %}
+<button type="button" class="btn btn-theme theme-toggle login-theme" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <i class="bi bi-moon-stars-fill icon-dark"></i><i class="bi bi-sun-fill icon-light"></i>
+</button>
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-login">
+    <div class="col-lg-10">
+      <div class="login-shell row g-0">
+        <div class="col-md-6 login-side d-none d-md-flex">
+          <div>
+            <span class="brand-mark brand-mark-lg mb-4"><i class="bi bi-heart-pulse-fill"></i></span>
+            <h1 class="h2 fw-bold mb-3">Medicine Recommendation System</h1>
+            <p class="mb-4 opacity-75">Record patient details, analyse symptoms and get structured recommendations in one place.</p>
+            <ul class="login-points">
+              <li><i class="bi bi-check-circle-fill"></i> Complete patient profile</li>
+              <li><i class="bi bi-check-circle-fill"></i> Symptom-based condition prediction</li>
+              <li><i class="bi bi-check-circle-fill"></i> One-tap emergency call</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6 login-form p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-1">Welcome back</h2>
+          <p class="text-muted-2 mb-4">Sign in to continue</p>
+          <form method="post" action="{{ url_for('login') }}">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" class="form-control" id="username" name="username" required autofocus autocomplete="username">
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                <button class="btn btn-soft" type="button" id="togglePwd" aria-label="Show password"><i class="bi bi-eye"></i></button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary-app w-100 btn-lg">Sign in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,513 @@
+{% extends 'base.html' %}
+{% block title %}Patient Assessment{% endblock %}
+{% block content %}
+{% set p = patient or {} %}
+<div class="container">
+
+  <!-- Page header -->
+  <section class="page-hero mb-4">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+      <div>
+        <span class="eyebrow">Patient Assessment</span>
+        <h1 class="display-title mb-1">Health Recommendation System</h1>
+        <p class="lead-sub mb-0">Record the patient's details, describe the symptoms, and get a suggested condition with precautions, medications, diet and workout guidance.</p>
+      </div>
+      <div class="hero-steps d-none d-md-flex">
+        <div class="step"><span>1</span>Patient details</div>
+        <div class="step"><span>2</span>Symptoms</div>
+        <div class="step"><span>3</span>Recommendation</div>
+      </div>
+    </div>
+  </section>
+
+  {% if errors %}
+  <div class="alert alert-danger app-alert" role="alert" id="formErrors">
+    <div class="fw-semibold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>Please fix the following:</div>
+    <ul class="mb-0 ps-3">{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data" id="assessmentForm" novalidate>
+    <input type="hidden" name="photo_data" id="photoData" value="{{ p.photo or '' }}">
+
+    <div class="row g-4">
+      <!-- LEFT: Personal info -->
+      <div class="col-lg-4">
+        <div class="card app-card hover-lift h-100">
+          <div class="card-header-app"><i class="bi bi-person-vcard"></i> Personal information</div>
+          <div class="card-body">
+            <div class="photo-uploader mb-4">
+              <div class="photo-preview" id="photoPreview">
+                {% if p.photo %}<img src="{{ p.photo }}" alt="Patient photo">{% else %}<i class="bi bi-person-fill"></i>{% endif %}
+              </div>
+              <div>
+                <label for="photo" class="btn btn-soft btn-sm mb-1"><i class="bi bi-camera me-1"></i>Upload photo</label>
+                <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none">
+                <button type="button" class="btn btn-link btn-sm text-muted-2 p-0 ms-1 {{ '' if p.photo else 'd-none' }}" id="removePhoto">Remove</button>
+                <div class="form-hint">JPG, PNG or WEBP, max 2 MB</div>
+                <div class="invalid-feedback d-block" id="photoError"></div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Full name <span class="req">*</span></label>
+              <input type="text" class="form-control" id="name" name="name" maxlength="100" required
+                     value="{{ p.name or '' }}" placeholder="e.g. Ananya Rao" autocomplete="name">
+              <div class="invalid-feedback">Please enter the patient's name.</div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-5">
+                <label for="age" class="form-label">Age <span class="req">*</span></label>
+                <input type="number" class="form-control" id="age" name="age" min="0" max="130" step="1" required
+                       value="{{ p.age or '' }}" placeholder="Years">
+                <div class="invalid-feedback">0 - 130</div>
+              </div>
+              <div class="col-7">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select" id="gender" name="gender">
+                  <option value="">Select</option>
+                  {% for g in genders %}<option value="{{ g }}" {{ 'selected' if p.gender == g }}>{{ g }}</option>{% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Contact number <span class="req">*</span></label>
+              <!-- Hidden field that stores the final combined value submitted to the server -->
+              <input type="hidden" id="phone" name="phone" value="{{ p.phone or '' }}">
+              <div class="input-group phone-input-group">
+                <!-- Country code dropdown -->
+                <select class="form-select phone-country-select" id="phoneCountry" aria-label="Country code">
+                  <option value="+91" data-min="10" data-max="10" selected>🇮🇳 India (+91)</option>
+                  <option value="+1"  data-min="10" data-max="10">🇺🇸 USA (+1)</option>
+                  <option value="+44" data-min="10" data-max="10">🇬🇧 UK (+44)</option>
+                  <option value="+61" data-min="9"  data-max="9" >🇦🇺 Australia (+61)</option>
+                  <option value="+1"  data-min="10" data-max="10">🇨🇦 Canada (+1)</option>
+                  <option value="+49" data-min="10" data-max="11">🇩🇪 Germany (+49)</option>
+                  <option value="+33" data-min="9"  data-max="9" >🇫🇷 France (+33)</option>
+                  <option value="+81" data-min="10" data-max="11">🇯🇵 Japan (+81)</option>
+                  <option value="+86" data-min="11" data-max="11">🇨🇳 China (+86)</option>
+                  <option value="+55" data-min="10" data-max="11">🇧🇷 Brazil (+55)</option>
+                  <option value="+7"  data-min="10" data-max="10">🇷🇺 Russia (+7)</option>
+                  <option value="+39" data-min="9"  data-max="10">🇮🇹 Italy (+39)</option>
+                  <option value="+34" data-min="9"  data-max="9" >🇪🇸 Spain (+34)</option>
+                  <option value="+52" data-min="10" data-max="10">🇲🇽 Mexico (+52)</option>
+                  <option value="+966" data-min="9" data-max="9" >🇸🇦 Saudi Arabia (+966)</option>
+                  <option value="+971" data-min="9" data-max="9" >🇦🇪 UAE (+971)</option>
+                  <option value="+65" data-min="8"  data-max="8" >🇸🇬 Singapore (+65)</option>
+                  <option value="+27" data-min="9"  data-max="9" >🇿🇦 South Africa (+27)</option>
+                  <option value="+234" data-min="10" data-max="10">🇳🇬 Nigeria (+234)</option>
+                  <option value="+82" data-min="9"  data-max="10">🇰🇷 South Korea (+82)</option>
+                  <option value="+62" data-min="9"  data-max="12">🇮🇩 Indonesia (+62)</option>
+                  <option value="+92" data-min="10" data-max="10">🇵🇰 Pakistan (+92)</option>
+                  <option value="+880" data-min="10" data-max="10">🇧🇩 Bangladesh (+880)</option>
+                  <option value="+64" data-min="8"  data-max="9" >🇳🇿 New Zealand (+64)</option>
+                  <option value="+31" data-min="9"  data-max="9" >🇳🇱 Netherlands (+31)</option>
+                  <option value="+46" data-min="9"  data-max="9" >🇸🇪 Sweden (+46)</option>
+                  <option value="+41" data-min="9"  data-max="9" >🇨🇭 Switzerland (+41)</option>
+                  <option value="+90" data-min="10" data-max="10">🇹🇷 Turkey (+90)</option>
+                  <option value="+63" data-min="10" data-max="10">🇵🇭 Philippines (+63)</option>
+                  <option value="+60" data-min="9"  data-max="10">🇲🇾 Malaysia (+60)</option>
+                </select>
+                <!-- Number-only input -->
+                <input type="text" class="form-control phone-number-input" id="phoneNumber"
+                       inputmode="numeric" maxlength="12" autocomplete="tel-national"
+                       placeholder="10-digit number">
+              </div>
+              <div class="form-hint mt-1" id="phoneHint">Enter exactly <strong id="phoneDigitLabel">10</strong> digit(s) for the selected country.</div>
+              <div class="invalid-feedback d-block d-none" id="phoneError">Enter a valid number for the selected country.</div>
+            </div>
+            <div>
+              <label class="form-label">Email <span class="opt">(optional)</span></label>
+              <!-- Hidden field stores the assembled email -->
+              <input type="hidden" id="email" name="email" value="{{ p.email or '' }}">
+              <div class="input-group email-input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="text" class="form-control email-username-input" id="emailUsername"
+                       maxlength="64" autocomplete="username"
+                       placeholder="username">
+                <select class="form-select email-domain-select" id="emailDomain" aria-label="Email domain">
+                  <option value="@gmail.com"      selected>@gmail.com</option>
+                  <option value="@yahoo.com"              >@yahoo.com</option>
+                  <option value="@outlook.com"            >@outlook.com</option>
+                  <option value="@hotmail.com"            >@hotmail.com</option>
+                  <option value="@icloud.com"             >@icloud.com</option>
+                  <option value="@rediffmail.com"         >@rediffmail.com</option>
+                  <option value="__custom__"              >✏️ Add new</option>
+                </select>
+                <!-- Shown only when "Add new" is selected -->
+                <input type="text" class="form-control email-custom-domain-input d-none" id="emailCustomDomain"
+                       maxlength="60" placeholder="@yourdomain.com">
+              </div>
+              <div class="invalid-feedback d-block d-none" id="emailError">Enter a valid username (no spaces or @ symbols).</div>
+              <div class="invalid-feedback d-block d-none" id="emailDomainError">Enter a valid domain (e.g. @company.com).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: vitals, medical background, symptoms -->
+      <div class="col-lg-8">
+        <div class="card app-card hover-lift mb-4">
+          <div class="card-header-app"><i class="bi bi-activity"></i> Vitals</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="blood_group" class="form-label">Blood group</label>
+                <select class="form-select" id="blood_group" name="blood_group">
+                  <option value="">Select</option>
+                  {% for b in blood_groups %}<option value="{{ b }}" {{ 'selected' if p.blood_group == b }}>{{ b }}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="weight" class="form-label">Weight</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="weight" name="weight" min="0.5" max="500" step="0.1"
+                         value="{{ p.weight or '' }}" placeholder="0.0">
+                  <span class="input-group-text">kg</span>
+                  <div class="invalid-feedback">0.5 - 500 kg</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label for="height" class="form-label">Height</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="height" name="height" min="20" max="280" step="0.1"
+                         value="{{ p.height or '' }}" placeholder="0">
+                  <span class="input-group-text">cm</span>
+                  <div class="invalid-feedback">20 - 280 cm</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card app-card hover-lift mb-4">
+          <div class="card-header-app"><i class="bi bi-clipboard2-pulse"></i> Medical background</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="current_medications" class="form-label">Currently taking medications</label>
+                <textarea class="form-control" id="current_medications" name="current_medications" rows="3" maxlength="1000"
+                          placeholder="e.g. Metformin 500 mg twice daily">{{ p.current_medications or '' }}</textarea>
+              </div>
+              <div class="col-md-6">
+                <label for="allergies" class="form-label">Allergies</label>
+                <textarea class="form-control" id="allergies" name="allergies" rows="3" maxlength="1000"
+                          placeholder="e.g. Penicillin, peanuts. Write 'None' if not known">{{ p.allergies or '' }}</textarea>
+              </div>
+              <div class="col-12">
+                <label for="history" class="form-label">Medical history / description</label>
+                <textarea class="form-control" id="history" name="history" rows="3" maxlength="2000"
+                          placeholder="Past illnesses, surgeries, chronic conditions, family history...">{{ p.history or '' }}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card app-card hover-lift symptom-card">
+          <div class="card-header-app"><i class="bi bi-thermometer-half"></i> Symptoms</div>
+          <div class="card-body">
+            <label for="symptoms" class="form-label">Enter patient symptoms <span class="req">*</span></label>
+            <input type="text" class="form-control form-control-lg" id="symptoms" name="symptoms" required
+                   value="{{ user_input or '' }}" placeholder="e.g. itching, skin rash, nodal skin eruptions">
+            <div class="invalid-feedback">Please enter at least one symptom.</div>
+            <div class="form-hint mt-2">Separate multiple symptoms with commas, or tap a common symptom below to add it.</div>
+            <div class="chip-row mt-2" id="symptomChips" aria-label="Common symptoms">
+              {% for s in ['Fever', 'Cough', 'Sneeze', 'Headache', 'Sore throat', 'Stomach pain', 'Chest pain', 'Knee pain',
+                           'Back pain', 'Joint pain', 'Vomiting', 'Nausea', 'Diarrhoea', 'Fatigue', 'Dizziness',
+                           'Breathlessness', 'Itching', 'Skin rash', 'Chills', 'Muscle pain'] %}
+              <button type="button" class="chip" data-symptom="{{ s|lower }}" aria-pressed="false"><i class="bi bi-plus-lg"></i>{{ s }}</button>
+              {% endfor %}
+            </div>
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+              <button type="submit" class="btn btn-primary-app btn-lg flex-grow-1" id="predictBtn">
+                <span class="btn-label"><i class="bi bi-search-heart me-2"></i>Get recommendation</span>
+                <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2"></span>Analysing...</span>
+              </button>
+              <button type="button" class="btn btn-soft btn-lg" id="resetBtn"><i class="bi bi-arrow-counterclockwise me-1"></i>Clear form</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% if predicted_disease %}
+  <!-- RESULTS -->
+  <section id="results" class="mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <h2 class="section-title mb-0">Assessment report</h2>
+      <div class="d-flex align-items-center gap-3 flex-wrap">
+        <span class="small text-muted-2"><i class="bi bi-clock me-1"></i>{{ report_time }}</span>
+        <button type="submit" form="assessmentForm" formaction="{{ url_for('report') }}" class="btn btn-primary-app" id="pdfBtn">
+          <i class="bi bi-file-earmark-arrow-down me-1"></i>Download PDF report
+        </button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card app-card hover-lift patient-summary h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="summary-photo">
+                {% if p.photo %}<img src="{{ p.photo }}" alt="Patient photo">{% else %}<i class="bi bi-person-fill"></i>{% endif %}
+              </div>
+              <div>
+                <div class="h5 fw-bold mb-0">{{ p.name }}</div>
+                <div class="text-muted-2 small">{{ p.age }} yrs{% if p.gender %} &middot; {{ p.gender }}{% endif %}</div>
+              </div>
+            </div>
+            <dl class="summary-list mb-0">
+              <dt>Contact</dt><dd>{{ p.phone }}{% if p.email %}<br>{{ p.email }}{% endif %}</dd>
+              <dt>Blood group</dt><dd>{{ p.blood_group or '—' }}</dd>
+              <dt>Weight / Height</dt><dd>{{ (p.weight ~ ' kg') if p.weight else '—' }} / {{ (p.height ~ ' cm') if p.height else '—' }}</dd>
+              <dt>Current medications</dt><dd>{{ p.current_medications or '—' }}</dd>
+              <dt>Allergies</dt><dd class="{{ 'text-allergy' if p.allergies and p.allergies|lower not in ['none','no','nil','na','n/a'] }}">{{ p.allergies or '—' }}</dd>
+              <dt>History</dt><dd>{{ p.history or '—' }}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card app-card hover-lift result-card h-100">
+          <div class="result-banner">
+            <div class="small text-uppercase fw-semibold opacity-75">Possible condition</div>
+            <div class="result-disease">{{ predicted_disease }}</div>
+            {% if matched_symptoms %}
+            <div class="mt-2">{% for m in matched_symptoms %}<span class="tag">{{ m }}</span>{% endfor %}</div>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <ul class="nav nav-pills result-tabs mb-3" role="tablist">
+              <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-desc" type="button" role="tab"><i class="bi bi-info-circle me-1"></i>Description</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-prec" type="button" role="tab"><i class="bi bi-shield-check me-1"></i>Precautions</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-med" type="button" role="tab"><i class="bi bi-capsule me-1"></i>Medications</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-work" type="button" role="tab"><i class="bi bi-person-walking me-1"></i>Workouts</button></li>
+              <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-diet" type="button" role="tab"><i class="bi bi-egg-fried me-1"></i>Diet</button></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="tab-desc" role="tabpanel"><p class="mb-0 result-text">{{ disease_description }}</p></div>
+              <div class="tab-pane fade" id="tab-prec" role="tabpanel"><ul class="check-list">{% for i in disease_precautions %}<li>{{ i }}</li>{% endfor %}</ul></div>
+              <div class="tab-pane fade" id="tab-med" role="tabpanel">
+                <ul class="check-list">{% for i in disease_medications %}<li>{{ i }}</li>{% endfor %}</ul>
+              </div>
+              <div class="tab-pane fade" id="tab-work" role="tabpanel"><ul class="check-list">{% for i in disease_workout %}<li>{{ i }}</li>{% endfor %}</ul></div>
+              <div class="tab-pane fade" id="tab-diet" role="tabpanel"><ul class="check-list">{% for i in disease_diet %}<li>{{ i }}</li>{% endfor %}</ul></div>
+            </div>
+            <div class="disclaimer mt-4"><i class="bi bi-info-circle me-1"></i>This is an automated suggestion, not a diagnosis. Please consult a qualified doctor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  'use strict';
+
+  /* ── Helpers ───────────────────────────────────────────────────── */
+  function $id(id) { return document.getElementById(id); }
+
+  /* ── Elements ──────────────────────────────────────────────────── */
+  var countrySelect = $id('phoneCountry');
+  var phoneInput    = $id('phoneNumber');
+  var phoneHidden   = $id('phone');
+  var phoneHint     = $id('phoneHint');
+  var phoneError    = $id('phoneError');
+
+  var emailUsername    = $id('emailUsername');
+  var emailDomain      = $id('emailDomain');
+  var emailCustomInput = $id('emailCustomDomain');
+  var emailHidden      = $id('email');
+  var emailError       = $id('emailError');
+  var emailDomainError = $id('emailDomainError');
+
+  var form             = $id('assessmentForm');
+
+  /* ── Digit limits from selected option ─────────────────────────── */
+  function getDigitLimits() {
+    var opt = countrySelect.options[countrySelect.selectedIndex];
+    return { min: parseInt(opt.dataset.min, 10), max: parseInt(opt.dataset.max, 10) };
+  }
+
+  function updatePhoneHint() {
+    var lim  = getDigitLimits();
+    var code = countrySelect.value;
+    phoneInput.setAttribute('maxlength', lim.max);
+    if (lim.min === lim.max) {
+      phoneHint.innerHTML = 'Enter exactly <strong>' + lim.min + '</strong> digit(s) for ' + code + '.';
+    } else {
+      phoneHint.innerHTML = 'Enter <strong>' + lim.min + '\u2013' + lim.max + '</strong> digit(s) for ' + code + '.';
+    }
+    assemblePhone();
+  }
+
+  /* ── Assemble phone hidden field ────────────────────────────────── */
+  function assemblePhone() {
+    var digits = phoneInput.value.replace(/\D/g, '');
+    phoneHidden.value = digits.length ? (countrySelect.value + digits) : '';
+  }
+
+  function validatePhoneInput() {
+    var digits = phoneInput.value.replace(/\D/g, '');
+    var lim    = getDigitLimits();
+    if (digits.length === 0) { showPhoneError(false); return true; }
+    var ok = digits.length >= lim.min && digits.length <= lim.max;
+    showPhoneError(!ok);
+    return ok;
+  }
+
+  function showPhoneError(show) {
+    phoneError.classList.toggle('d-none', !show);
+    phoneInput.classList.toggle('is-invalid', show);
+    phoneInput.classList.toggle('is-valid', !show && phoneInput.value.length > 0);
+  }
+
+  /* ── Digits-only filter on phone input ──────────────────────────── */
+  phoneInput.addEventListener('input', function () {
+    var clean = this.value.replace(/\D/g, '');
+    if (clean !== this.value) this.value = clean;
+    assemblePhone();
+    validatePhoneInput();
+  });
+
+  countrySelect.addEventListener('change', function () {
+    phoneInput.value = '';
+    phoneError.classList.add('d-none');
+    phoneInput.classList.remove('is-invalid', 'is-valid');
+    updatePhoneHint();
+  });
+
+  /* ── Custom domain helper ───────────────────────────────────────── */
+  function isCustomDomain() { return emailDomain.value === '__custom__'; }
+
+  function getActiveDomain() {
+    if (isCustomDomain()) {
+      var raw = emailCustomInput.value.trim();
+      /* auto-prepend @ if user forgot */
+      return raw.startsWith('@') ? raw : (raw.length ? '@' + raw : '');
+    }
+    return emailDomain.value;
+  }
+
+  /* ── Show / hide custom domain input ───────────────────────────── */
+  function toggleCustomDomain() {
+    var custom = isCustomDomain();
+    emailCustomInput.classList.toggle('d-none', !custom);
+    if (custom) {
+      emailCustomInput.focus();
+    } else {
+      emailCustomInput.value = '';
+      emailDomainError.classList.add('d-none');
+      emailCustomInput.classList.remove('is-invalid', 'is-valid');
+    }
+  }
+
+  /* ── Assemble email hidden field ────────────────────────────────── */
+  function assembleEmail() {
+    var user   = emailUsername.value.trim();
+    var domain = getActiveDomain();
+    emailHidden.value = (user.length && domain.length > 1) ? (user + domain) : '';
+  }
+
+  /* ── Validate username ──────────────────────────────────────────── */
+  function validateEmailInput() {
+    var user = emailUsername.value.trim();
+    if (user.length === 0) {
+      emailError.classList.add('d-none');
+      emailUsername.classList.remove('is-invalid', 'is-valid');
+      return true;
+    }
+    var ok = /^[^\s@]+$/.test(user);
+    emailError.classList.toggle('d-none', ok);
+    emailUsername.classList.toggle('is-invalid', !ok);
+    emailUsername.classList.toggle('is-valid', ok);
+    return ok;
+  }
+
+  /* ── Validate custom domain ─────────────────────────────────────── */
+  function validateCustomDomain() {
+    if (!isCustomDomain()) return true;
+    var raw = emailCustomInput.value.trim();
+    var dom = raw.startsWith('@') ? raw : (raw.length ? '@' + raw : '');
+    /* must be @something.something */
+    var ok  = /^@[^\s@]+\.[^\s@]{2,}$/.test(dom);
+    emailDomainError.classList.toggle('d-none', ok || raw.length === 0);
+    emailCustomInput.classList.toggle('is-invalid', !ok && raw.length > 0);
+    emailCustomInput.classList.toggle('is-valid', ok);
+    return ok || (emailUsername.value.trim().length === 0); /* ok if whole email blank */
+  }
+
+  emailUsername.addEventListener('input',    function () { assembleEmail(); validateEmailInput(); });
+  emailDomain.addEventListener('change',     function () { toggleCustomDomain(); assembleEmail(); });
+  emailCustomInput.addEventListener('input', function () { assembleEmail(); validateCustomDomain(); });
+
+  /* ── Form submit gate ───────────────────────────────────────────── */
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      var digits  = phoneInput.value.replace(/\D/g, '');
+      var lim     = getDigitLimits();
+      var phoneOk = digits.length >= lim.min && digits.length <= lim.max;
+      var emailOk = validateEmailInput();
+      var domainOk = validateCustomDomain();
+
+      if (!phoneOk) {
+        showPhoneError(true);
+        e.preventDefault(); e.stopPropagation();
+        phoneInput.focus(); return;
+      }
+      if (!emailOk) {
+        e.preventDefault(); e.stopPropagation();
+        emailUsername.focus(); return;
+      }
+      if (!domainOk) {
+        e.preventDefault(); e.stopPropagation();
+        emailCustomInput.focus(); return;
+      }
+      assemblePhone(); assembleEmail();
+    }, true);
+  }
+
+  /* ── Pre-fill visible inputs when page reloads with saved data ──── */
+  (function prefill() {
+    var sp = phoneHidden.value;   /* e.g. "+919876543210" */
+    if (sp) {
+      var opts = Array.from(countrySelect.options)
+                   .sort(function(a, b) { return b.value.length - a.value.length; });
+      for (var i = 0; i < opts.length; i++) {
+        if (sp.startsWith(opts[i].value)) {
+          countrySelect.value = opts[i].value;
+          phoneInput.value    = sp.slice(opts[i].value.length);
+          break;
+        }
+      }
+    }
+    updatePhoneHint();
+
+    var se = emailHidden.value;   /* e.g. "user@gmail.com" */
+    if (se && se.indexOf('@') > 0) {
+      var idx = se.indexOf('@');
+      emailUsername.value = se.substring(0, idx);
+      var dom = se.substring(idx);
+      var matched = false;
+      for (var j = 0; j < emailDomain.options.length; j++) {
+        if (emailDomain.options[j].value === dom) { emailDomain.value = dom; matched = true; break; }
+      }
+      /* if no preset option matched, it was a custom domain */
+      if (!matched) {
+        emailDomain.value        = '__custom__';
+        emailCustomInput.value   = dom;
+        emailCustomInput.classList.remove('d-none');
+      }
+      assembleEmail();
+    }
+  })();
+
+})();
+</script>
+{% endblock %}

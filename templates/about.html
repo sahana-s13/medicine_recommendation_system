@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}About the system{% endblock %}
+{% block content %}
+<div class="container">
+  <section class="page-hero mb-4">
+    <span class="eyebrow">About</span>
+    <h1 class="display-title mb-1">About the system</h1>
+  </section>
+  <div class="card app-card hover-lift"><div class="card-body p-4 p-lg-5 content-body">
+    <p>The Medicine Recommendation System is a health recommendation tool that combines a curated symptom reference with a machine-learning model (Support Vector Classifier) trained on symptom-disease data.</p>
+    <p>After recording the patient's profile and symptoms, the system suggests a possible condition along with a description, precautions, commonly used medications, diet and workout guidance.</p>
+    <div class="disclaimer mt-3"><i class="bi bi-info-circle me-1"></i>The Medicine Recommendation System provides general information only and does not replace a consultation with a qualified healthcare professional.</div>
+  </div></div>
+</div>
+{% endblock %}

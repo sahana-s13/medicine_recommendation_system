@@ -1,0 +1,29 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Flask debug
+instance/
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (optional – uncomment if you want to exclude)
+# models/svc_model.pkl
+
+# Logs
+*.log

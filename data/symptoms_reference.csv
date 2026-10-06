@@ -1,0 +1,25 @@
+Symptom,Possible Disease,Description,Precautions,Medications,Workout,Diet
+Fever,Influenza (Flu),"A viral infection affecting the respiratory system, causing body temperature to rise as the immune system fights it off.","Rest and stay hydrated
+Isolate from others to avoid spreading
+Monitor temperature regularly
+Seek care if fever exceeds 103°F (39.4°C) or lasts >3 days",Acetaminophen or ibuprofen for fever/aches (as directed on label); consult a doctor before antivirals,Avoid exercise until fever resolves; light stretching only once recovered,"Warm fluids, soups, herbal tea, fruits rich in vitamin C"
+Cough,Common Cold / Bronchitis,"Inflammation of the airways or throat, often from a viral infection, causing irritation and mucus production.","Cover mouth when coughing
+Avoid smoke/dust exposure
+Stay hydrated
+See a doctor if cough persists >2–3 weeks or brings up blood",Cough suppressants (dextromethorphan) or expectorants (guaifenesin); throat lozenges,Avoid strenuous activity; gentle walking if energy allows,"Warm liquids, honey with warm water, avoid cold/fried foods"
+Sneeze (excessive),Allergic Rhinitis,"An allergic reaction to airborne particles (pollen, dust, pet dander) causing inflammation of the nasal passages.","Identify and avoid triggers
+Keep windows closed during high pollen days
+Use air purifiers
+Wash bedding regularly","Antihistamines (cetirizine, loratadine); nasal corticosteroid sprays if recommended by a doctor",Regular exercise is fine; avoid outdoor workouts on high-pollen days,"Anti-inflammatory foods (ginger, turmeric); avoid known allergens"
+Stomach pain,Gastritis,"Inflammation of the stomach lining, often from infection, NSAID overuse, or excess acid, causing pain and discomfort.","Avoid spicy/fatty/acidic foods
+Limit alcohol and NSAIDs
+Eat smaller, frequent meals
+See a doctor if pain is severe or persistent","Antacids, H2 blockers (famotidine), or proton pump inhibitors (as advised by a doctor)",Light walking; avoid intense core exercises until resolved,"Bland diet (rice, bananas, toast), avoid caffeine/spicy food"
+Chest pain,GERD (Acid Reflux),"Backflow of stomach acid into the esophagus causing burning chest discomfort. Note: chest pain can also signal heart-related issues, so severe or crushing pain needs emergency evaluation.","Avoid lying down right after eating
+Elevate head while sleeping
+Avoid trigger foods (spicy, fatty, caffeine)
+Seek emergency care for sudden severe chest pain, pressure, or pain radiating to arm/jaw",Antacids or proton pump inhibitors (omeprazole) as directed,Avoid heavy lifting or intense exercise right after meals,"Smaller meals, avoid citrus/spicy/fried foods, no late-night eating"
+Knee pain,Osteoarthritis,"Degeneration of joint cartilage, commonly from age or overuse, leading to stiffness and pain in the knee joint.","Avoid high-impact activities
+Maintain healthy weight to reduce joint stress
+Use knee support if needed
+Consult a doctor if swelling or instability occurs","NSAIDs (ibuprofen, naproxen) for pain/inflammation, as directed","Low-impact exercise: swimming, cycling, gentle stretching","Anti-inflammatory diet (omega-3s, leafy greens); avoid excess sugar/processed food"
